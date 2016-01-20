@@ -13,6 +13,9 @@ then
   sudo apt-get install -y rpl
 fi 
 
+#------remove the changes in template files if any--------------------
+git checkout $templateFiles
+
 #------configure the specified files using configurations from config.properties file-------
 while read line           
 do           
