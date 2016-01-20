@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="75">
+  <server artifactsdir="artifacts" purgeStart="1.0" purgeUpto="2.0" agentAutoRegisterKey="123456789abcdef" commandRepositoryLocation="default" serverId="458ef6f7-6c39-4f7e-b1ce-ad5723fcbce1">
+    <security>
+      <passwordFile path="/passwd" />
+    </security>
+  </server>
+  <pipelines group="stakater">
+    <pipeline name="stakater" isLocked="true">
+      <params>
+        <param name="SOURCE_DIR" />
+      </params>
+      <materials>
+        <git url="git-url" branch="git-branch" dest="stakater" materialName="stakater" />
+      </materials>
+      <stage name="Package">
+        <jobs>
+          <job name="Compile">
+            <tasks>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker run -d --name docker_javawebapp -v /home/gradle:/home/aurora rasheedamir/java-web-app-docker</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker cp ./stakater docker_javawebapp:/home/aurora</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker exec docker_javawebapp /bin/bash -c "export GRADLE_USER_HOME=/home/aurora/.gradle; cd /home/aurora/stakater; gradle build -x test --info"</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker cp docker_javawebapp:/home/aurora/stakater/war-file-path .</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker stop docker_javawebapp</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker rm -v docker_javawebapp</arg>
+                <runif status="any" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Publish" fetchMaterials="false">
+        <jobs>
+          <job name="Publish">
+            <tasks>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker build -t localhost:5000/stakater:latest -f dockerfile-path .</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo docker push localhost:5000/stakater:latest</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
+                <arg>-c</arg>
+                <arg>sudo rm *.war</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Run" fetchMaterials="false">
+        <jobs>
+          <job name="Run">
+            <tasks>
+              <exec command="/bin/bash">
+                <arg>-c</arg>
+                <arg>sudo docker-compose -f app-compose-path up -d</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  <agents>
+    <agent hostname="fc31e9272df9" ipaddress="172.17.0.4" uuid="47d3db86-59bd-45b0-b995-76a708c8e89a" />
+  </agents>
+</cruise>
+

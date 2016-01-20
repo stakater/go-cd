@@ -1,0 +1,10 @@
+FROM ahmadiq/tomcat:8-jdk8u25
+
+WORKDIR /tomcat
+RUN rm -Rf webapps/*
+ADD *.war webapps/ROOT.war
+
+EXPOSE 8080
+
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]

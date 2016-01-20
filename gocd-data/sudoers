@@ -1,0 +1,3 @@
+# User privilege specification
+go	ALL=NOPASSWD: ALL
+

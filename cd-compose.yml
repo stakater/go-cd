@@ -1,0 +1,36 @@
+registry:
+  image: registry:2.1.1
+  volumes:
+    - ./vol/docker:/tmp/registry-dev
+#  pid: "host"
+  net: "container:goagent"
+#  expose:
+#    - "5000"
+goserver:
+  image: gocd/gocd-server:15.2.0
+  volumes:
+    - ./gocd-data/passwd:/passwd
+  volumes_from:
+    - godata
+  ports:
+    - "8153:8153"
+  expose:
+    - "8154"
+  pid: "host"
+godata:
+  build: gocd-data
+goagent:
+  image: gocd/gocd-agent:15.2.0
+  links:
+    - goserver:go-server
+  ports:
+    - "5000:5000"
+  pid: "host"
+  volumes:
+    - ./gocd-data/sudoers:/etc/sudoers.d/sudoers
+    - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /usr/bin/docker:/usr/bin/docker
+    - /usr/lib/x86_64-linux-gnu/libapparmor.so.1:/usr/lib/x86_64-linux-gnu/libapparmor.so.1
+    - /usr/lib/x86_64-linux-gnu/libapparmor.so.1.1.0:/usr/lib/x86_64-linux-gnu/libapparmor.so.1.1.0
+    - /home/keys:/home/keys
