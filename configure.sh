@@ -3,15 +3,8 @@
 #----path of the files to be configured----------------
 templateFiles="gocd-data/conf/cruise-config.xml app-compose.yml"
 
-#---install rpl package if not already installed---
-cmd="whereis rpl"
-rplPackage=$(bash -c "$cmd")
-IFS=':' read -ra rplLocation <<< "$rplPackage"
-
-if [ -n "${rplLocation[1]}"  ]
-then
-  sudo apt-get install -y rpl
-fi 
+#---install rpl package---
+sudo apt-get install -y rpl
 
 #------remove the changes in template files if any--------------------
 git checkout $templateFiles
