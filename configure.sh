@@ -16,3 +16,6 @@ do
     rpl -i -e "$prop" "$value" $templateFiles
 	     
 done <config.properties   
+
+#-----change the owner to root--------
+sudo chown root:root gocd-data -R
