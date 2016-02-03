@@ -1,15 +1,15 @@
-stakater-db:
+mysql-db:
  image: mysql:latest
- container_name: stakater-db
- net: "container:stakater_app"
+ container_name: mysql-db
+ net: "container:sample-app"
  volumes:
  - /home/stakater-db-data:/var/lib/mysql
  environment:
  - MYSQL_ROOT_PASSWORD=123456
 
-stakater_app:
+sample-app:
  image: localhost:5000/stakater:latest
- container_name: stakater-app
+ container_name: sample-app
  ports:
-   - "app-public-ip:8080"
+   - "app-public-port:8080"
    - "3306:3306"
