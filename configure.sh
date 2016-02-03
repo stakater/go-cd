@@ -3,9 +3,6 @@
 #----path of the files to be configured----------------
 templateFiles="gocd-data/conf/cruise-config.xml deployment/app-compose.yml"
 
-#---install rpl package---
-sudo apt-get install -y rpl
-
 #------configure the specified files using configurations from config.properties file-------
 while read line           
 do           
