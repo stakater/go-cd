@@ -29,7 +29,7 @@
               </exec>
               <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">
                 <arg>-c</arg>
-                <arg>sudo docker exec docker_javawebapp /bin/bash -c "export GRADLE_USER_HOME=/home/aurora/.gradle; cd /home/aurora/stakater; gradle build -x test --info"</arg>
+                <arg>sudo docker exec docker_javawebapp /bin/bash -c "export GRADLE_USER_HOME=/home/aurora/.gradle; cd /home/aurora/stakater/gradle-root; gradle build -x test --info"</arg>
                 <runif status="passed" />
               </exec>
               <exec command="/bin/bash" workingdir="#{SOURCE_DIR}">

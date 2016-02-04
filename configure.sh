@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #----path of the files to be configured----------------
-templateFiles="gocd-data/conf/cruise-config.xml deployment/app-compose.yml"
+templateFiles="gocd-data/conf/cruise-config.xml"
 
 #------configure the specified files using configurations from config.properties file-------
 while read line           
