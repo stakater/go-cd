@@ -10,11 +10,12 @@ if [ "$1" = "-gitRepo" ] && [ -n "$2" ] && [ "$3" = "-branch" ] && [ -n "$4" ] &
 
   rpl -i -e "git-url-value" "$2" $configFile
   rpl -i -e "git-branch-value" "$4" $configFile
-  rpl -i -e "war-file-path-value" "$6" $configFile
   
   if [ -n "$8" ] && [ "$7" = "-gradleRoot" ]; then 
+  	rpl -i -e "war-file-path-value" "$8/$6" $configFile
   	rpl -i -e "gradle-root-value" "$8" $configFile
   else
+  	rpl -i -e "war-file-path-value" "$6" $configFile
   	rpl -i -e "gradle-root-value" " " $configFile	
   fi;
 
