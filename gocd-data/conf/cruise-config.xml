@@ -90,7 +90,6 @@
     </pipeline>
    </pipelines>
   <agents>
-    <agent hostname="fc31e9272df9" ipaddress="172.17.0.4" uuid="47d3db86-59bd-45b0-b995-76a708c8e89a" />
   </agents>
 </cruise>
 
